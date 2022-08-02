@@ -58,35 +58,9 @@ using (SoundDevice wave = new UnixSoundDevice(new SoundConnectionSettings
 {
     var source = new CancellationTokenSource();
     wave.RecordingStopped += (sender, e) => Console.WriteLine(e.Exception?.Message);
-    wave.DataAvailable += (sender, e) =>
-    {
-        var count = e.Buffer?.Count(o => o > 0);
-
-        if (count > 0)
-            Console.WriteLine(count);
-    };
     wave.StartRecordingAsync(source);
+    wave.DataAvailable += wave.OnReceivedStream;
 
     while (source.Token.IsCancellationRequested is false)
-    {
-        using (var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                UseShellExecute = false,
-                FileName = "clear",
-                RedirectStandardOutput = true
-            }
-        })
-        {
-            process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
-
-            if (process.Start())
-            {
-                process.BeginOutputReadLine();
-                await process.WaitForExitAsync();
-            }
-        }
         await Task.Delay(0x400 * 5);
-    }
 }
