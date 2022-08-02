@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using MindMap;
+using MindMap.Device;
+
+using System.Diagnostics;
 
 var index = 0;
 
@@ -46,4 +49,22 @@ if (Console.ReadLine() is string volume)
             await process.WaitForExitAsync();
         }
     }
+}
+using (SoundDevice wave = new UnixSoundDevice(new SoundConnectionSettings
+{
+    RecordingSampleRate = 16000,
+    RecordingChannels = 1
+}))
+{
+    wave.RecordingStopped += (sender, e) =>
+    {
+        if (e.Exception is not null)
+            Console.WriteLine(e.Exception.Message);
+    };
+    wave.DataAvailable += (sender, e) =>
+    {
+        
+    };
+    wave.StartRecordingAsync(new CancellationTokenSource());
+    Console.WriteLine(Console.ReadLine());
 }
