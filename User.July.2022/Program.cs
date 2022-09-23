@@ -1,3 +1,1 @@
-﻿using MindMap;
-
-await new Usim().RunAsync();
+﻿await new MindMap.Branch.Usim().RunAsync();

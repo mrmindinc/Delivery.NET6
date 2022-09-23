@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace MindMap
+namespace MindMap.Branch
 {
     class Usim
     {
